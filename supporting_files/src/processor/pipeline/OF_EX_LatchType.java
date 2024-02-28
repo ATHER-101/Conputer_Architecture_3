@@ -9,7 +9,7 @@ public class OF_EX_LatchType {
 	int B;
 	int RS1;
 	int instruction;
-	Control_Signal Control_Unit;
+	Control_Unit control_Unit;
 	
 	public OF_EX_LatchType()
 	{
@@ -72,12 +72,12 @@ public class OF_EX_LatchType {
 		instruction = _instruction;
 	}
 
-	public Control_Signal getControl_Unit() {
-		return Control_Unit;
+	public Control_Unit getControl_Unit() {
+		return control_Unit;
 	}
 
-	public void setControl_Unit(Control_Signal control_Unit) {
-		Control_Unit = control_Unit;
+	public void setControl_Unit(Control_Unit control_unit) {
+		control_Unit = control_unit;
 	}
 
 }

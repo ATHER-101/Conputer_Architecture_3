@@ -2,7 +2,7 @@ package processor.pipeline;
 
 import java.util.HashMap;
 
-public class Control_Signal {
+public class Control_Unit {
     boolean isSt;
     boolean isLd;
     boolean isImmediate;
@@ -24,7 +24,7 @@ public class Control_Signal {
     boolean isBgt;
     boolean isJmp;
 
-    public Control_Signal(String OpCode) {
+    public Control_Unit(String OpCode) {
 
 
         HashMap<String, String> operation = new HashMap<String, String>() {{

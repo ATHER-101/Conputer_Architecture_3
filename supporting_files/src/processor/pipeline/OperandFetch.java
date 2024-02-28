@@ -21,7 +21,7 @@ public class OperandFetch {
 			String Instruction_Binary = String.format("%32s", Integer.toBinaryString(instruction)).replace(' ', '0');
 			String opCode = Instruction_Binary.substring(0, 5);
 
-			Control_Signal Control_Unit = new Control_Signal(opCode);
+			Control_Unit control_Unit = new Control_Unit(opCode);
 
 			int immx = Integer.parseInt(Instruction_Binary.substring(15, 32), 2);
 
@@ -32,24 +32,25 @@ public class OperandFetch {
 			int rs2 = Integer.parseInt(Instruction_Binary.substring(10, 15), 2);
 			int rd = Integer.parseInt(Instruction_Binary.substring(15, 20), 2);
 
-			// if(!Control_Unit.isImmediate){
-			// 	System.out.println("Instruction:"+Instruction_Binary+"  OpCode:"+opCode+"  isImmediate:"+Control_Unit.isImmediate+"  Immediate:"+immx+"  branch_Target_17:"+branch_Target_17+"  branch_Target_22:"+branch_Target_22+"  rs1:"+rs1+"  rs2:"+rs2+"  rd:"+rd);
-			// }
+			if(!control_Unit.isImmediate){
+				System.out.println("Instruction:"+Instruction_Binary+"  OpCode:"+opCode+"  isImmediate:"+control_Unit.isImmediate+"  Immediate:"+immx+"  branch_Target_17:"+branch_Target_17+"  branch_Target_22:"+branch_Target_22+"  rs1:"+rs1+"  rs2:"+rs2+"  rd:"+rd);
+			}
+			System.out.println();
 
-			OF_EX_Latch.setControl_Unit(Control_Unit);
+			OF_EX_Latch.setControl_Unit(control_Unit);
 			OF_EX_Latch.setBranch_Target_17(branch_Target_17);
 			OF_EX_Latch.setBranch_Target_22(branch_Target_22);
 			OF_EX_Latch.setInstruction(instruction);
 
 			int op1 = containingProcessor.getRegisterFile().getValue(rs1);
 			int op2;
-			if(Control_Unit.isSt == true){
+			if(control_Unit.isSt == true){
 				op2 = containingProcessor.getRegisterFile().getValue(rd);
 			}else{
 				op2 = containingProcessor.getRegisterFile().getValue(rs2);
 			}
 
-			if(Control_Unit.isSt == true){
+			if(control_Unit.isSt == true){
 				OF_EX_Latch.setA(op2);
 			}else{
 				OF_EX_Latch.setA(op1);
@@ -57,16 +58,16 @@ public class OperandFetch {
 
 			OF_EX_Latch.setRS1(op1);
 			
-			if(Control_Unit.isImmediate == true){
+			if(control_Unit.isImmediate == true){
 				OF_EX_Latch.setB(immx);
 			}else{
 				OF_EX_Latch.setB(op2);
 			}
 
-			// //test
-			// System.out.println("Instruction:"+OF_EX_Latch.getInstruction()+"  branch_Target_17:"+OF_EX_Latch.getBranch_Target_17()+"  branch_Target_22:"+OF_EX_Latch.getBranch_Target_22()+"  RS1:"+OF_EX_Latch.getRS1()+"  A:"+OF_EX_Latch.getA()+"  B:"+OF_EX_Latch.getB());
-			// //test
-			// System.out.println("isSub:"+OF_EX_Latch.getControl_Unit().isSub+"  isWb:"+OF_EX_Latch.getControl_Unit().isWb);
+			//test
+			System.out.println("Instruction:"+OF_EX_Latch.getInstruction()+"  branch_Target_17:"+OF_EX_Latch.getBranch_Target_17()+"  branch_Target_22:"+OF_EX_Latch.getBranch_Target_22()+"  RS1:"+OF_EX_Latch.getRS1()+"  A:"+OF_EX_Latch.getA()+"  B:"+OF_EX_Latch.getB());
+			//test
+			System.out.println("isSub:"+OF_EX_Latch.getControl_Unit().isSub+"  isWb:"+OF_EX_Latch.getControl_Unit().isWb);
 			
 			IF_OF_Latch.setOF_enable(false);
 			OF_EX_Latch.setEX_enable(true);
