@@ -58,7 +58,6 @@ public class Simulator {
 	}
 
 	public static void simulate() {
-		simulationComplete = true;
 		while (simulationComplete == false) {
 			processor.getIFUnit().performIF();
 			processor.getOFUnit().performOF();
@@ -66,6 +65,7 @@ public class Simulator {
 			processor.getMAUnit().performMA();
 			processor.getRWUnit().performRW();
 			Clock.incrementClock();
+			simulationComplete = true;
 		}
 
 		// TODO
