@@ -2,6 +2,8 @@ package processor.pipeline;
 
 import java.util.HashMap;
 
+import generic.Simulator;
+
 public class Control_Unit {
     boolean isSt;
     boolean isLd;
@@ -57,6 +59,7 @@ public class Control_Unit {
             put("11011", "blt");
             put("11100", "bgt");
             put("11000", "jmp");
+            put("11101", "end");
         }};
     
 
@@ -163,6 +166,11 @@ public class Control_Unit {
             // RI type :
             case "jmp": {
                 isJmp = true;
+                break;
+            }
+
+            case "end": {
+                Simulator.setSimulationComplete(true);
                 break;
             }
 

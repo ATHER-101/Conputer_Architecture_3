@@ -6,7 +6,7 @@ public class EX_MA_LatchType {
 	int ALU_Result;
 	int RS1;
 	int instruction;
-	Control_Signal Control_Unit;
+	Control_Unit control_Unit;
 	
 	public EX_MA_LatchType()
 	{
@@ -45,12 +45,12 @@ public class EX_MA_LatchType {
 		instruction = _instruction;
 	}
 
-	public Control_Signal getControl_Unit() {
-		return Control_Unit;
+	public Control_Unit getControl_Unit() {
+		return control_Unit;
 	}
 
-	public void setControl_Unit(Control_Signal control_Unit) {
-		Control_Unit = control_Unit;
+	public void setControl_Unit(Control_Unit control_unit) {
+		control_Unit = control_unit;
 	}
 
 }

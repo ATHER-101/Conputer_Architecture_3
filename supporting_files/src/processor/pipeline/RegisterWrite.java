@@ -1,6 +1,6 @@
 package processor.pipeline;
 
-import generic.Simulator;
+// import generic.Simulator;
 import processor.Processor;
 
 public class RegisterWrite {
@@ -19,6 +19,27 @@ public class RegisterWrite {
 	{
 		if(MA_RW_Latch.isRW_enable())
 		{
+			int data;
+			if(MA_RW_Latch.getControl_Unit().isLd){
+				data = MA_RW_Latch.getLd_Result();
+			}else{
+				data = MA_RW_Latch.getALU_Result();
+			}
+
+			String Instruction_Binary = String.format("%32s", Integer.toBinaryString(MA_RW_Latch.getInstruction())).replace(' ', '0');
+
+			int rd;
+			if(MA_RW_Latch.getControl_Unit().isImmediate){
+				rd = Integer.parseInt(Instruction_Binary.substring(10, 15), 2);
+			}else{
+				rd = Integer.parseInt(Instruction_Binary.substring(15, 20), 2);
+			}
+			
+
+			if(MA_RW_Latch.getControl_Unit().isWb){
+				containingProcessor.getRegisterFile().setValue(rd, data);
+			}
+
 			MA_RW_Latch.setRW_enable(false);
 			IF_EnableLatch.setIF_enable(true);
 		}
