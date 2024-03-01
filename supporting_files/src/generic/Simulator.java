@@ -55,8 +55,6 @@ public class Simulator {
 		processor.getRegisterFile().setValue(0, 0);
 		processor.getRegisterFile().setValue(1, 65535);
 		processor.getRegisterFile().setValue(2, 65535);
-		// processor.getRegisterFile().setValue(3, 3);
-		// processor.getRegisterFile().setValue(4, 4);
 	}
 
 	public static void simulate() {

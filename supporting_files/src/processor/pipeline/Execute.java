@@ -22,7 +22,7 @@ public class Execute {
 			
 			Flags flags = new Flags();
 
-			ALU alu = new ALU(OF_EX_Latch.getA(), OF_EX_Latch.getB(), OF_EX_Latch.getControl_Unit(),flags);
+			ALU alu = new ALU(OF_EX_Latch.getA(), OF_EX_Latch.getB(), OF_EX_Latch.getControl_Unit(),flags,containingProcessor);
 			EX_MA_Latch.setALU_Result(alu.getALU_Result());
 
 			if(OF_EX_Latch.getControl_Unit().isBeq && flags.getE()){

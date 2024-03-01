@@ -23,19 +23,13 @@ public class OperandFetch {
 
 			Control_Unit control_Unit = new Control_Unit(opCode);
 
-			int immx = Integer.parseInt(Instruction_Binary.substring(15, 32), 2);
+			int immx = binaryStringToSignedInt(Instruction_Binary.substring(15, 32));
 
-			int branch_Target_17 = containingProcessor.getRegisterFile().getProgramCounter() + Integer.parseInt(Instruction_Binary.substring(15, 32), 2) - 1;
-			int branch_Target_22 = containingProcessor.getRegisterFile().getProgramCounter() + Integer.parseInt(Instruction_Binary.substring(10, 32), 2) - 1;
+			int branch_Target_17 = containingProcessor.getRegisterFile().getProgramCounter() + binaryStringToSignedInt(Instruction_Binary.substring(15, 32)) - 1;
+			int branch_Target_22 = containingProcessor.getRegisterFile().getProgramCounter() + binaryStringToSignedInt(Instruction_Binary.substring(10, 32)) - 1;
 
 			int rs1 = Integer.parseInt(Instruction_Binary.substring(5, 10), 2);
 			int rs2 = Integer.parseInt(Instruction_Binary.substring(10, 15), 2);
-			// int rd = Integer.parseInt(Instruction_Binary.substring(15, 20), 2);
-
-			// if(!control_Unit.isImmediate){
-			// 	System.out.println("Instruction:"+Instruction_Binary+"  OpCode:"+opCode+"  isImmediate:"+control_Unit.isImmediate+"  Immediate:"+immx+"  branch_Target_17:"+branch_Target_17+"  branch_Target_22:"+branch_Target_22+"  rs1:"+rs1+"  rs2:"+rs2+"  rd:"+rd);
-			// }
-			// System.out.println();
 
 			OF_EX_Latch.setControl_Unit(control_Unit);
 			OF_EX_Latch.setBranch_Target_17(branch_Target_17);
@@ -44,11 +38,6 @@ public class OperandFetch {
 
 			int op1 = containingProcessor.getRegisterFile().getValue(rs1);
 			int op2 = containingProcessor.getRegisterFile().getValue(rs2);
-			// if(control_Unit.isSt || control_Unit.isBeq || control_Unit.isBne || control_Unit.isBgt || control_Unit.isBlt){
-			// 	op2 = containingProcessor.getRegisterFile().getValue(rd);
-			// }else{
-			// 	op2 = containingProcessor.getRegisterFile().getValue(rs2);
-			// }
 
 			if(control_Unit.isSt){
 				OF_EX_Latch.setA(op2);
@@ -63,15 +52,28 @@ public class OperandFetch {
 			}else{
 				OF_EX_Latch.setB(op2);
 			}
-
-			// //test
-			// System.out.println("Instruction:"+OF_EX_Latch.getInstruction()+"  branch_Target_17:"+OF_EX_Latch.getBranch_Target_17()+"  branch_Target_22:"+OF_EX_Latch.getBranch_Target_22()+"  RS1:"+OF_EX_Latch.getRS1()+"  A:"+OF_EX_Latch.getA()+"  B:"+OF_EX_Latch.getB());
-			// //test
-			// System.out.println("isSub:"+OF_EX_Latch.getControl_Unit().isSub+"  isWb:"+OF_EX_Latch.getControl_Unit().isWb);
 			
 			IF_OF_Latch.setOF_enable(false);
 			OF_EX_Latch.setEX_enable(true);
 		}
 	}
+
+	public int binaryStringToSignedInt(String binaryString) {
+        // Check if the binary string is representing a negative number
+        boolean isNegative = binaryString.charAt(0) == '1';
+        
+        // Convert binary string to integer
+        int unsignedInt = Integer.parseInt(binaryString, 2);
+        
+        // If it's a negative number, convert it to its two's complement representation
+        if (isNegative) {
+            // Calculate the two's complement
+            int numBits = binaryString.length();
+            int mask = (1 << numBits) - 1; // Create a mask with all 1s of the same length as the binary string
+            unsignedInt = unsignedInt - mask - 1;
+        }
+        
+        return unsignedInt;
+    }
 
 }

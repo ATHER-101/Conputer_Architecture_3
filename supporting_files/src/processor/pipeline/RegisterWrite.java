@@ -1,6 +1,5 @@
 package processor.pipeline;
 
-// import generic.Simulator;
 import processor.Processor;
 
 public class RegisterWrite {

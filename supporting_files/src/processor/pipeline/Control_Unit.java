@@ -84,14 +84,39 @@ public class Control_Unit {
                 isDiv = true;
                 break;
             }
-            case "and":
-            case "or":
-            case "xor":
-            case "slt":
-            case "sll":
-            case "srl":
+            case "and": {
+                isWb = true;
+                isAND = true;
+                break;
+            }
+            case "or": {
+                isWb = true;
+                isOR = true;
+                break;
+            }
+            case "xor": {
+                isWb = true;
+                isXOR = true;
+                break;
+            }
+            case "slt": {
+                isWb = true;
+                isSlt = true;
+                break;
+            }
+            case "sll": {
+                isWb = true;
+                isSll = true;
+                break;
+            }
+            case "srl": {
+                isWb = true;
+                isSrl = true;
+                break;
+            }
             case "sra": {
-                
+                isWb = true;
+                isSra = true;
                 break;
             }
 
@@ -120,14 +145,46 @@ public class Control_Unit {
                 isDiv = true;
                 break;
             }
-            case "andi":
-            case "ori":
-            case "xori":
-            case "slti":
-            case "slli":
-            case "srli":
+            case "andi": {
+                isImmediate = true;
+                isWb = true;
+                isAND = true;
+                break;
+            }
+            case "ori": {
+                isImmediate = true;
+                isWb = true;
+                isOR = true;
+                break;
+            }
+            case "xori": {
+                isImmediate = true;
+                isWb = true;
+                isXOR = true;
+                break;
+            }
+            case "slti": {
+                isImmediate = true;
+                isWb = true;
+                isSlt = true;
+                break;
+            }
+            case "slli": {
+                isImmediate = true;
+                isWb = true;
+                isSll = true;
+                break;
+            }
+            case "srli": {
+                isImmediate = true;
+                isWb = true;
+                isSrl = true;
+                break;
+            }
             case "srai": {
-                
+                isImmediate = true;
+                isWb = true;
+                isSra = true;
                 break;
             }
 

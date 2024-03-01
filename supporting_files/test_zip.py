@@ -32,7 +32,7 @@ os.chdir(submissions_temp_dir)
 
 stdout_file = open("./tmp.output", 'a')
 popen_args = ["ant", "make-jar"]
-proc = subprocess.Popen(popen_args, stdout = stdout_file, stderr = stdout_file)
+proc = subprocess.Popen(popen_args, stdout = stdout_file, stderr = stdout_file, shell = True)
 timer = Timer(5, proc.kill)
 try:
 	timer.start()
