@@ -58,6 +58,8 @@ public class Simulator {
 	}
 
 	public static void simulate() {
+		Statistics stats = new Statistics();
+
 		while (simulationComplete == false) {
 			processor.getIFUnit().performIF();
 			processor.getOFUnit().performOF();
@@ -65,14 +67,12 @@ public class Simulator {
 			processor.getMAUnit().performMA();
 			processor.getRWUnit().performRW();
 			Clock.incrementClock();
+			stats.setNumberOfCycles(Statistics.numberOfCycles + 1);
+			stats.setNumberOfInstructions(Statistics.numberOfInstructions + 1);
 		}
 
 		// TODO
 		// set statistics
-
-		Statistics stats = new Statistics();
-		stats.setNumberOfCycles(10);
-		stats.setNumberOfInstructions(10);
 	}
 
 	public static void setSimulationComplete(boolean value) {
