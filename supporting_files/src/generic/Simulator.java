@@ -61,11 +61,11 @@ public class Simulator {
 		Statistics stats = new Statistics();
 
 		while (simulationComplete == false) {
-			processor.getIFUnit().performIF();
-			processor.getOFUnit().performOF();
-			processor.getEXUnit().performEX();
-			processor.getMAUnit().performMA();
 			processor.getRWUnit().performRW();
+			processor.getMAUnit().performMA();
+			processor.getEXUnit().performEX();
+			processor.getOFUnit().performOF();
+			processor.getIFUnit().performIF();
 			Clock.incrementClock();
 			stats.setNumberOfCycles(Statistics.numberOfCycles + 1);
 			stats.setNumberOfInstructions(Statistics.numberOfInstructions + 1);

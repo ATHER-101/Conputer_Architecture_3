@@ -25,6 +25,7 @@ public class Control_Unit {
     boolean isBlt;
     boolean isBgt;
     boolean isJmp;
+    boolean isEnd;
 
     public Control_Unit(String OpCode) {
 
@@ -227,7 +228,7 @@ public class Control_Unit {
             }
 
             case "end": {
-                Simulator.setSimulationComplete(true);
+                isEnd = true;
                 break;
             }
 

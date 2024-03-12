@@ -27,14 +27,20 @@ public class InstructionFetch {
 			}else{
 				currentPC = containingProcessor.getRegisterFile().getProgramCounter();
 			}
-
+			
 			EX_IF_Latch.setBranchTaken(false);
-
+			
 			int newInstruction = containingProcessor.getMainMemory().getWord(currentPC);
 			IF_OF_Latch.setInstruction(newInstruction);
 			containingProcessor.getRegisterFile().setProgramCounter(currentPC + 1);
+
+			EX_IF_Latch.setBranchTaken(EX_IF_Latch.isnextBranchTaken());
+			EX_IF_Latch.setBranch_PC(EX_IF_Latch.getnextBranch_PC());
+			EX_IF_Latch.setnextBranchTaken(false);
 			
-			IF_EnableLatch.setIF_enable(false);
+			System.out.println(IF_OF_Latch.getInstruction());
+			System.out.println();
+			// IF_EnableLatch.setIF_enable(false);
 			IF_OF_Latch.setOF_enable(true);
 		}
 	}
