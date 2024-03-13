@@ -34,6 +34,39 @@ public class OperandFetch {
 
 			int rs1 = Integer.parseInt(Instruction_Binary.substring(5, 10), 2);
 			int rs2 = Integer.parseInt(Instruction_Binary.substring(10, 15), 2);
+			int rd = Integer.parseInt(Instruction_Binary.substring(15, 20), 2);
+
+			//dataInterlock mechanism
+			if((control_Unit.isImmediate && containingProcessor.getDataInterlock(rs1)) || (!control_Unit.isImmediate && (containingProcessor.getDataInterlock(rs1) || containingProcessor.getDataInterlock(rs2)))){
+
+				control_Unit = new Control_Unit("11111");
+				int PC = containingProcessor.getRegisterFile().getProgramCounter();
+				containingProcessor.getRegisterFile().setProgramCounter(PC-1);
+				
+			}else{
+				if(control_Unit.isWb){
+					if(control_Unit.isImmediate){
+						containingProcessor.setDataInterlock(rs2, true);
+					}else{
+						containingProcessor.setDataInterlock(rd, true);
+					}
+				}
+				if(control_Unit.isDiv){
+					containingProcessor.setDataInterlock(31, true);
+				}
+			}
+			
+			//branchInterlock mechanism
+			if(IF_OF_Latch.branchInterlock>0){
+				control_Unit = new Control_Unit("11111");
+				int PC = containingProcessor.getRegisterFile().getProgramCounter();
+				containingProcessor.getRegisterFile().setProgramCounter(PC-1);
+				System.out.println(containingProcessor.getRegisterFile().getProgramCounter());
+				IF_OF_Latch.branchInterlock--;
+			}
+			if(control_Unit.isBeq || control_Unit.isBne || control_Unit.isBlt || control_Unit.isBgt || control_Unit.isJmp){
+				IF_OF_Latch.branchInterlock=2;
+			}
 
 			OF_EX_Latch.setControl_Unit(control_Unit);
 			OF_EX_Latch.setBranch_Target_17(branch_Target_17);
@@ -57,6 +90,8 @@ public class OperandFetch {
 				OF_EX_Latch.setB(op2);
 			}
 			
+			System.out.println(IF_OF_Latch.branchInterlock);
+
 			if(control_Unit.isEnd){
 				IF_EnableLatch.setIF_enable(false);
 			}

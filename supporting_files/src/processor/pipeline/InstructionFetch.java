@@ -28,6 +28,8 @@ public class InstructionFetch {
 				currentPC = containingProcessor.getRegisterFile().getProgramCounter();
 			}
 			
+			System.out.println(currentPC);
+
 			EX_IF_Latch.setBranchTaken(false);
 			
 			int newInstruction = containingProcessor.getMainMemory().getWord(currentPC);
@@ -39,6 +41,10 @@ public class InstructionFetch {
 			EX_IF_Latch.setnextBranchTaken(false);
 			
 			System.out.println(IF_OF_Latch.getInstruction());
+			for(int i=0;i<32;i++){
+				System.out.print(i+":"+containingProcessor.getDataInterlock(i)+"   ");
+			}
+			System.out.println();
 			System.out.println();
 			// IF_EnableLatch.setIF_enable(false);
 			IF_OF_Latch.setOF_enable(true);

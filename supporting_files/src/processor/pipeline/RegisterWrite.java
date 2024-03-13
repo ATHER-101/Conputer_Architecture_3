@@ -43,6 +43,29 @@ public class RegisterWrite {
 				containingProcessor.getRegisterFile().setValue(rd, data);
 			}
 
+			if(MA_RW_Latch.Interlock!=-1){
+				if(MA_RW_Latch.Interlock>=0){
+					containingProcessor.setDataInterlock(MA_RW_Latch.Interlock, false);
+				}else{
+					containingProcessor.setDataInterlock(MA_RW_Latch.Interlock+33, false);
+					containingProcessor.setDataInterlock(31, false);
+				}
+				// containingProcessor.setDataInterlock(MA_RW_Latch.Interlock, false);
+				// if(MA_RW_Latch.getControl_Unit().isDiv)
+				// containingProcessor.setDataInterlock(31, false);
+				MA_RW_Latch.Interlock=-1;
+			}
+			if(MA_RW_Latch.getControl_Unit().isWb){
+				if(MA_RW_Latch.getControl_Unit().isDiv){
+					MA_RW_Latch.Interlock=rd-33;
+				}else{
+					MA_RW_Latch.Interlock=rd;
+				}
+				
+				// MA_RW_Latch.Interlock=rd;
+			}
+			// System.out.println(MA_RW_Latch.Interlock);
+
 			if(MA_RW_Latch.getControl_Unit().isEnd){
 				EX_MA_Latch.setMA_enable(false);
 				Simulator.setSimulationComplete(true);

@@ -7,10 +7,13 @@ public class MA_RW_LatchType {
 	int ALU_Result;
 	int instruction;
 	Control_Unit control_Unit;
+
+	int Interlock;
 	
 	public MA_RW_LatchType()
 	{
 		RW_enable = false;
+		Interlock=-1;
 	}
 
 	public boolean isRW_enable() {

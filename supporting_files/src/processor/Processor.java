@@ -31,6 +31,8 @@ public class Processor {
 	Execute EXUnit;
 	MemoryAccess MAUnit;
 	RegisterWrite RWUnit;
+
+	boolean[] dataInterlock;
 	
 	public Processor()
 	{
@@ -49,6 +51,8 @@ public class Processor {
 		EXUnit = new Execute(this, IF_OF_Latch, OF_EX_Latch, EX_MA_Latch, EX_IF_Latch);
 		MAUnit = new MemoryAccess(this, OF_EX_Latch, EX_MA_Latch, MA_RW_Latch);
 		RWUnit = new RegisterWrite(this, EX_MA_Latch , MA_RW_Latch, IF_EnableLatch);
+
+		dataInterlock = new boolean[32]; 
 	}
 	
 	public void printState(int memoryStartingAddress, int memoryEndingAddress)
@@ -92,6 +96,14 @@ public class Processor {
 
 	public RegisterWrite getRWUnit() {
 		return RWUnit;
+	}
+
+	public boolean getDataInterlock(int index) {
+		return dataInterlock[index];
+	}
+
+	public void setDataInterlock(int index,boolean value){
+		dataInterlock[index] = value;
 	}
 
 }
