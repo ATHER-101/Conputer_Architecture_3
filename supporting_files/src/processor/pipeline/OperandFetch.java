@@ -1,5 +1,7 @@
 package processor.pipeline;
 
+import generic.Simulator;
+import generic.Statistics;
 import processor.Processor;
 
 public class OperandFetch {
@@ -8,7 +10,8 @@ public class OperandFetch {
 	IF_OF_LatchType IF_OF_Latch;
 	OF_EX_LatchType OF_EX_Latch;
 
-	public OperandFetch(Processor containingProcessor,IF_EnableLatchType iF_EnableLatch, IF_OF_LatchType iF_OF_Latch, OF_EX_LatchType oF_EX_Latch) {
+	public OperandFetch(Processor containingProcessor, IF_EnableLatchType iF_EnableLatch, IF_OF_LatchType iF_OF_Latch,
+			OF_EX_LatchType oF_EX_Latch) {
 		this.containingProcessor = containingProcessor;
 		this.IF_EnableLatch = iF_EnableLatch;
 		this.IF_OF_Latch = iF_OF_Latch;
@@ -19,6 +22,8 @@ public class OperandFetch {
 
 		if (IF_OF_Latch.isOF_enable()) {
 			System.out.println(IF_OF_Latch.getInstruction());
+			
+			Statistics stats = new Statistics();
 			// TODO
 			int instruction = IF_OF_Latch.getInstruction();
 
@@ -29,43 +34,53 @@ public class OperandFetch {
 
 			int immx = binaryStringToSignedInt(Instruction_Binary.substring(15, 32));
 
-			int branch_Target_17 = containingProcessor.getRegisterFile().getProgramCounter() + binaryStringToSignedInt(Instruction_Binary.substring(15, 32)) - 1;
-			int branch_Target_22 = containingProcessor.getRegisterFile().getProgramCounter() + binaryStringToSignedInt(Instruction_Binary.substring(10, 32)) - 1;
+			int branch_Target_17 = containingProcessor.getRegisterFile().getProgramCounter()
+					+ binaryStringToSignedInt(Instruction_Binary.substring(15, 32)) - 1;
+			int branch_Target_22 = containingProcessor.getRegisterFile().getProgramCounter()
+					+ binaryStringToSignedInt(Instruction_Binary.substring(10, 32)) - 1;
 
 			int rs1 = Integer.parseInt(Instruction_Binary.substring(5, 10), 2);
 			int rs2 = Integer.parseInt(Instruction_Binary.substring(10, 15), 2);
 			int rd = Integer.parseInt(Instruction_Binary.substring(15, 20), 2);
 
-			//dataInterlock mechanism
-			if((control_Unit.isImmediate && containingProcessor.getDataInterlock(rs1)) || (!control_Unit.isImmediate && (containingProcessor.getDataInterlock(rs1) || containingProcessor.getDataInterlock(rs2)))){
 
+			// branchInterlock mechanism
+			if (IF_OF_Latch.branchInterlock > 0) {
 				control_Unit = new Control_Unit("11111");
 				int PC = containingProcessor.getRegisterFile().getProgramCounter();
-				containingProcessor.getRegisterFile().setProgramCounter(PC-1);
-				
-			}else{
-				if(control_Unit.isWb){
-					if(control_Unit.isImmediate){
-						containingProcessor.setDataInterlock(rs2, true);
-					}else{
-						containingProcessor.setDataInterlock(rd, true);
-					}
-				}
-				if(control_Unit.isDiv){
-					containingProcessor.setDataInterlock(31, true);
-				}
-			}
-			
-			//branchInterlock mechanism
-			if(IF_OF_Latch.branchInterlock>0){
-				control_Unit = new Control_Unit("11111");
-				int PC = containingProcessor.getRegisterFile().getProgramCounter();
-				containingProcessor.getRegisterFile().setProgramCounter(PC-1);
+				containingProcessor.getRegisterFile().setProgramCounter(PC - 1);
+				// Statistics stats = new Statistics();
+				stats.setNumberOfInstructions(Statistics.numberOfInstructions - 1);
 				System.out.println(containingProcessor.getRegisterFile().getProgramCounter());
 				IF_OF_Latch.branchInterlock--;
-			}
-			if(control_Unit.isBeq || control_Unit.isBne || control_Unit.isBlt || control_Unit.isBgt || control_Unit.isJmp){
-				IF_OF_Latch.branchInterlock=2;
+			} else {
+
+				// dataInterlock mechanism
+				if ((control_Unit.isSt && (containingProcessor.getDataInterlock(rs1) || containingProcessor.getDataInterlock(rs2))) || (control_Unit.isImmediate && containingProcessor.getDataInterlock(rs1)) || (!control_Unit.isImmediate && (containingProcessor.getDataInterlock(rs1) || containingProcessor.getDataInterlock(rs2)))) {
+
+					control_Unit = new Control_Unit("11111");
+					stats.setStalls(Statistics.Stalls+1);
+					int PC = containingProcessor.getRegisterFile().getProgramCounter();
+					containingProcessor.getRegisterFile().setProgramCounter(PC - 1);
+					// Statistics stats = new Statistics();
+					stats.setNumberOfInstructions(Statistics.numberOfInstructions - 1);
+
+				} else {
+					if (control_Unit.isWb) {
+						if (control_Unit.isImmediate) {
+							containingProcessor.setDataInterlock(rs2, true);
+						} else {
+							containingProcessor.setDataInterlock(rd, true);
+						}
+					}
+					if (control_Unit.isDiv) {
+						containingProcessor.setDataInterlock(31, true);
+					}
+				}
+
+				if (control_Unit.isBeq || control_Unit.isBne || control_Unit.isBlt || control_Unit.isBgt || control_Unit.isJmp) {
+					IF_OF_Latch.branchInterlock = 2;
+				}
 			}
 
 			OF_EX_Latch.setControl_Unit(control_Unit);
@@ -76,23 +91,23 @@ public class OperandFetch {
 			int op1 = containingProcessor.getRegisterFile().getValue(rs1);
 			int op2 = containingProcessor.getRegisterFile().getValue(rs2);
 
-			if(control_Unit.isSt){
+			if (control_Unit.isSt) {
 				OF_EX_Latch.setA(op2);
-			}else{
+			} else {
 				OF_EX_Latch.setA(op1);
 			}
 
 			OF_EX_Latch.setRS1(op1);
-			
-			if(control_Unit.isImmediate){
+
+			if (control_Unit.isImmediate) {
 				OF_EX_Latch.setB(immx);
-			}else{
+			} else {
 				OF_EX_Latch.setB(op2);
 			}
-			
+
 			System.out.println(IF_OF_Latch.branchInterlock);
 
-			if(control_Unit.isEnd){
+			if (control_Unit.isEnd) {
 				IF_EnableLatch.setIF_enable(false);
 			}
 			// IF_OF_Latch.setOF_enable(false);
@@ -101,21 +116,21 @@ public class OperandFetch {
 	}
 
 	public int binaryStringToSignedInt(String binaryString) {
-        // Check if the binary string is representing a negative number
-        boolean isNegative = binaryString.charAt(0) == '1';
-        
-        // Convert binary string to integer
-        int unsignedInt = Integer.parseInt(binaryString, 2);
-        
-        // If it's a negative number, convert it to its two's complement representation
-        if (isNegative) {
-            // Calculate the two's complement
-            int numBits = binaryString.length();
-            int mask = (1 << numBits) - 1; // Create a mask with all 1s of the same length as the binary string
-            unsignedInt = unsignedInt - mask - 1;
-        }
-        
-        return unsignedInt;
-    }
+		// Check if the binary string is representing a negative number
+		boolean isNegative = binaryString.charAt(0) == '1';
+
+		// Convert binary string to integer
+		int unsignedInt = Integer.parseInt(binaryString, 2);
+
+		// If it's a negative number, convert it to its two's complement representation
+		if (isNegative) {
+			// Calculate the two's complement
+			int numBits = binaryString.length();
+			int mask = (1 << numBits) - 1; // Create a mask with all 1s of the same length as the binary string
+			unsignedInt = unsignedInt - mask - 1;
+		}
+
+		return unsignedInt;
+	}
 
 }

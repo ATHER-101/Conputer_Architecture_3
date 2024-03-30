@@ -1,2 +1,4 @@
-Number of instructions executed = 15
-Number of cycles taken = 15
+Number of instructions executed = 277
+Number of cycles taken = 626
+CPI = 2.2599277
+Number of branch taken = 88

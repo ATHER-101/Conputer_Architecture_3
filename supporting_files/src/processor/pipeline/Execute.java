@@ -1,5 +1,6 @@
 package processor.pipeline;
 
+import generic.Statistics;
 import processor.Processor;
 
 public class Execute {
@@ -22,6 +23,7 @@ public class Execute {
 	{
 		if(OF_EX_Latch.isEX_enable()){
 			System.out.println(OF_EX_Latch.getInstruction());
+			Statistics stats = new Statistics();
 			
 			Flags flags = new Flags();
 
@@ -30,22 +32,32 @@ public class Execute {
 
 			if(OF_EX_Latch.getControl_Unit().isBeq && flags.getE()){
 				EX_IF_Latch.setnextBranchTaken(true);
+				stats.setBranchTaken(Statistics.BranchTaken+1);
+				stats.setWrongBranchTaken(Statistics.WrongBranchTaken+2);
 				EX_IF_Latch.setnextBranch_PC(OF_EX_Latch.getBranch_Target_17());
 			}
 			else if(OF_EX_Latch.getControl_Unit().isBne && flags.getNE()){
 				EX_IF_Latch.setnextBranchTaken(true);
+				stats.setBranchTaken(Statistics.BranchTaken+1);
+				stats.setWrongBranchTaken(Statistics.WrongBranchTaken+2);
 				EX_IF_Latch.setnextBranch_PC(OF_EX_Latch.getBranch_Target_17());
 			}
 			else if(OF_EX_Latch.getControl_Unit().isBgt && flags.getGT()){
 				EX_IF_Latch.setnextBranchTaken(true);
+				stats.setBranchTaken(Statistics.BranchTaken+1);
+				stats.setWrongBranchTaken(Statistics.WrongBranchTaken+2);
 				EX_IF_Latch.setnextBranch_PC(OF_EX_Latch.getBranch_Target_17());
 			}
 			else if(OF_EX_Latch.getControl_Unit().isBlt && flags.getLT()){
 				EX_IF_Latch.setnextBranchTaken(true);
+				stats.setBranchTaken(Statistics.BranchTaken+1);
+				stats.setWrongBranchTaken(Statistics.WrongBranchTaken+2);
 				EX_IF_Latch.setnextBranch_PC(OF_EX_Latch.getBranch_Target_17());
 			}
 			else if(OF_EX_Latch.getControl_Unit().isJmp){
 				EX_IF_Latch.setnextBranchTaken(true);
+				stats.setBranchTaken(Statistics.BranchTaken+1);
+				stats.setWrongBranchTaken(Statistics.WrongBranchTaken+2);
 				EX_IF_Latch.setnextBranch_PC(OF_EX_Latch.getBranch_Target_22());
 			}
 

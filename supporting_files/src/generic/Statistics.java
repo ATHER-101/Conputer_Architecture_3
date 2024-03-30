@@ -5,9 +5,12 @@ import java.io.PrintWriter;
 public class Statistics {
 	
 	// TODO add your statistics here
-	static int numberOfInstructions;
-	static int numberOfCycles;
-	
+	public static int numberOfInstructions;
+	public static int numberOfCycles;
+	public static float CPI;
+	public static int BranchTaken;
+	public static int WrongBranchTaken;
+	public static int Stalls;
 
 	public static void printStatistics(String statFile)
 	{
@@ -17,6 +20,10 @@ public class Statistics {
 			
 			writer.println("Number of instructions executed = " + numberOfInstructions);
 			writer.println("Number of cycles taken = " + numberOfCycles);
+			writer.println("CPI = " + CPI);
+			writer.println("Number of branch taken = " + BranchTaken);
+			writer.println("Number of wrong instruction taken = " + WrongBranchTaken);
+			writer.println("Number of stalls = " + Stalls);
 			
 			// TODO add code here to print statistics in the output file
 			
@@ -35,5 +42,21 @@ public class Statistics {
 
 	public void setNumberOfCycles(int numberOfCycles) {
 		Statistics.numberOfCycles = numberOfCycles;
+	}
+
+	public void setCPI(float cpi) {
+		Statistics.CPI = cpi;
+	}
+
+	public void setBranchTaken(int branchTaken) {
+		Statistics.BranchTaken = branchTaken;
+	}
+
+	public void setWrongBranchTaken(int wrongBranchTaken) {
+		Statistics.WrongBranchTaken = wrongBranchTaken;
+	}
+
+	public void setStalls(int stalls) {
+		Statistics.Stalls = stalls;
 	}
 }
